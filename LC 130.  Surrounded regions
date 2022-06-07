@@ -1,0 +1,80 @@
+# 130. Surrounded regions
+
+#     X X X X         X X X X
+#     X 0 0 X   =>    X X X X
+#     X X 0 X         X X X X
+#     X 0 X X         X 0 X X    
+
+#     X X X X         X X X X
+#     X 0 0 X   =>    X 0 0 X
+#     X X 0 X         X X 0 X
+#     X X 0 X         X X 0 X
+
+# 1. backtracking - complexity O(n^2)
+# 2. Graph traversal - complexity O(n^2)
+
+# Graph traversal solution
+def Surrounded_regions(Matrix:list[list]):
+
+    # 2. element on boundary and is an 0
+    # 3. dfs/bfs  and convert to intermedaite ValueError
+    def dfs(row,col):
+        Matrix[row][col]=='C'
+        neigh = [ [row+1,col],[row-1,col],[row,col+1],[row,col-1]]
+        for x, y in neigh:
+            if 0<= x <len(Matrix) and 0<=y<len(Matrix[0]) and Matrix[x][y]==0:
+                dfs(x,y)
+        
+        
+    # 1. traverse the elements on the boundary
+    for row in range(len(Matrix)):
+        for col in range (len(Matrix[0])):
+            if Matrix[row][col]==0 and (row in [0,len(Matrix)-1] or col in [0,len(Matrix[0])-1]):
+                dfs(row,col)
+
+    # 4. go through the whole graph and convert C to 0 and 0 to X
+    for row in range(len(Matrix)):
+        for col in range(len(Matrix[0])):
+            if Matrix[row][col]==0:
+                Matrix[row][col]='X'
+            if Matrix[row][col]=='C':
+                Matrix[row][col]=0
+                
+                
+            
+# Alternative solution, use backtarcking and recusion, uses the visited set 
+# to keep track of areas checked
+        
+         visited =[]
+        
+         def modDFS(row,col):
+             status=None
+             visited.append([row,col])
+             board[row][col]='X'
+             directions=[[row+1,col],[row-1,col],[row,col+1],[row,col-1]]
+             for x,y in directions:
+                 if not(0<=x<len(board) and 0<=y<len(board[0])):
+                     status=False  
+                     break
+                 if board[x][y]!='X':
+                     if  not modDFS(x,y):
+                         status=False
+                         break
+                     else:
+                         status=True
+            
+             if status==None:
+                 status=True            
+             if status==False:
+                  board[row][col]='O' 
+             return status
+                
+            
+         for row in range (1,len(board)-1):
+             for col in range (1,len(board[0])-1):
+                 if board[row][col]=='O' and [row,col] not in visited:
+                     modDFS(row,col)
+        
+                
+                
+    
